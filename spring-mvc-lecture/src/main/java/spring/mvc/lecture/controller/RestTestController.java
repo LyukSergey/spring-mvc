@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestTestController {
 
     @GetMapping("/hello")
-    public ResponseEntity<Map<String, String>> test(HttpServletRequest request) {
-        System.out.println("Accept header: " + request.getHeader("Accept"));
+    public ResponseEntity<Map<String, String>> hello(HttpServletRequest request) {
+        System.out.printf("Request in %s hello()%n", this.getClass().getSimpleName());
         final Map<String, String> data = new HashMap<>();
         data.put("hello", "world");
         return ResponseEntity.status(HttpStatus.OK)

@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ExceptionController {
 
     @GetMapping
-    public String listUsers() {
+    public String getException() {
+        System.out.printf("Request in %s getException()%n", this.getClass().getSimpleName());
         throw new RuntimeException("Some exception");
     }
 }
