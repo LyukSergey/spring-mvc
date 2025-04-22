@@ -16,7 +16,7 @@
 
   <servlet>
     <servlet-name>dispatcher</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <servlet-class>spring.mvc.lecture.dispatcherServlet.MyDispatcherServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
@@ -55,5 +55,15 @@
     <servlet-name>jsp</servlet-name>
     <url-pattern>*.jsp</url-pattern>
   </servlet-mapping>
+
+  <filter>
+    <filter-name>loggingFilter</filter-name>
+    <filter-class>spring.mvc.lecture.filter.LoggingFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>loggingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
 </web-app>

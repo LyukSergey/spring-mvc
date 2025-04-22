@@ -14,6 +14,13 @@
     <!-- Увімкнення Spring MVC аннотацій (@Controller, @RequestMapping і т.д.) -->
     <mvc:annotation-driven />
 
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**" /> <!-- для всіх шляхів -->
+            <bean class="spring.mvc.lecture.interceptor.LogInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <!-- Якщо ти використовуєш JSP -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" name="viewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>

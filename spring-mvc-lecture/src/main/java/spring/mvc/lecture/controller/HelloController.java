@@ -10,7 +10,7 @@ public class HelloController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String hello(Model model) {
-        System.out.println("Hello 1111");
+        System.out.printf("Request received in %s%n", HelloController.class.getSimpleName());
         model.addAttribute("message", "Hello from Spring MVC!");
         return "welcome";
     }
