@@ -8,13 +8,14 @@ public class MyDispatcherServlet extends DispatcherServlet {
 
     @Override
     protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        System.out.printf("🔍 Request received in: %s%n", this.getClass().getSimpleName());
         System.out.printf("🔍 Request in: " + request.getMethod() + " " + request.getRequestURI() + " " + this.getClass().getSimpleName() +"%n");
 
         long start = System.currentTimeMillis();
         super.doDispatch(request, response);
         long time = System.currentTimeMillis() - start;
-
-        System.out.println("Request out. Request takes = : " + time + " ms%n");
+        System.out.printf("🔍 Request out from: %s%n", this.getClass().getSimpleName());
+        System.out.printf("Request out. Request takes = : " + time + " ms%n");
     }
 
 }
