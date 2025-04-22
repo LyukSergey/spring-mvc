@@ -72,8 +72,6 @@
       <scope>provided</scope>
     </dependency>
 
-
-
     <!-- H2 Database -->
     <dependency>
       <groupId>com.h2database</groupId>
@@ -96,12 +94,21 @@
       <scope>provided</scope>
     </dependency>
 
-
-
     <dependency>
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
       <version>4.27.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.15.3</version> <!-- стабільна остання версія на 2025 рік -->
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.15.3</version> <!-- або така ж як у jackson-databind -->
     </dependency>
 
   </dependencies>
