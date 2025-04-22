@@ -27,9 +27,12 @@ public class App {
 
         UserService u3 = (UserService) context.getBean("userService2");
         UserService u4 = (UserService) context.getBean("userService2");
-        System.out.println("Singleton? u3 == u4 → " + (u3 == u4)); // true
+        UserService u5 = (UserService) context.getBean("userService2");
+        UserService u6 = (UserService) context.getBean("userService2");
+        System.out.println("Singleton? u3 == u4 == u5 == u6 → " + (u3 == u4 && u4 == u5 && u5 == u6)); // true
 
         System.out.println("Same TimeService? " + (u3.getTimeService() == u1.getTimeService())); // true
+        ObjectTracker.print();
     }
 }
 
