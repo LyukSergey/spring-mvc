@@ -29,8 +29,16 @@ public class MyApplicationContext {
                     }
                     beanScopes.put(clazz, scope);
                     if (scope == Scope.SINGLETON) {
-                        Object instance = createBean(clazz);
-                        singletonBeans.put(clazz, instance);
+                        singletonBeans.put(clazz, clazz.getDeclaredConstructor().newInstance());
+                    }
+                }
+            }
+            for (Class<?> clazz : singletonBeans.keySet()) {
+                for (Field field : clazz.getDeclaredFields()) {
+                    if (field.isAnnotationPresent(MyAutowired.class)) {
+                        field.setAccessible(true);
+                        Object dependency = getBean(field.getType());
+                        field.set(singletonBeans.get(clazz), dependency);
                     }
                 }
             }
@@ -54,7 +62,6 @@ public class MyApplicationContext {
 
     private Object createBean(Class<?> clazz) throws Exception {
         Object instance = clazz.getDeclaredConstructor().newInstance();
-
         for (Field field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(MyAutowired.class)) {
                 field.setAccessible(true);
