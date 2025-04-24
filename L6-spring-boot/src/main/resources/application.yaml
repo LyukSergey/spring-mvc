@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: L6-spring-boot
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: ${postgresql_user:sa}
+    password: ${postgresql_password:sa}
+    ## Hikari pool
+    ## https://github.com/brettwooldridge/HikariCP#configuration-knobs-baby
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: false
+      allow-pool-suspension: false
+      maximum-pool-size: 15
+      minimum-idle: 3
+      poolName: pdf-unlocker-pool
+  jpa:
+    show-sql: true
+    properties:
+      hibernate.jdbc.batch_size: 50
+      hibernate.format_sql: false
+      hibernate.generate_statistics: false
+    hibernate:
+      ddl-auto: none
+ironbank:
+  who-return-debts:
+    - Lanisters
