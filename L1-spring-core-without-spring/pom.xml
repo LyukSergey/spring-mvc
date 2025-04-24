@@ -7,7 +7,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>spring-core-custom-withot-spring</name>
+  <name>L1-spring-core-without-spring</name>
   <url>http://maven.apache.org</url>
 
   <properties>

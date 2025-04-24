@@ -7,7 +7,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>spring-core-without-annotations</name>
+  <name>L2-spring-core-without-annotations</name>
   <url>http://maven.apache.org</url>
 
   <properties>
