@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.kaf22.lecture.mvc</groupId>
-  <artifactId>spring-mvc-lecture</artifactId>
+  <artifactId>L5-spring-mvc-lecture</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>spring-mvc-lecture Maven Webapp</name>
