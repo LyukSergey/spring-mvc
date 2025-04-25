@@ -4,7 +4,7 @@ import com.lss.beans.TimeService;
 import com.lss.beans.UserService;
 import com.lss.context.AppContext;
 
-public class App {
+public class SpringCoreWithoutAnnotations {
 
     public static void main(String[] args) {
         AppContext context = new AppContext();

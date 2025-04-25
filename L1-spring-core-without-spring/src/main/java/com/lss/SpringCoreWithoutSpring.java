@@ -10,7 +10,7 @@ import com.lss.service.OrderService;
 import com.lss.service.PaymentService;
 import com.lss.utils.ObjectTracker;
 
-public class App {
+public class SpringCoreWithoutSpring {
 
     public static void main(String[] args) {
         System.out.println("//-----User 1 order-----//");

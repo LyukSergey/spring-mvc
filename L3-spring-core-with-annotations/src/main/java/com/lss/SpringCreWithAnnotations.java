@@ -7,7 +7,7 @@ import com.lss.services.UserService;
  * Hello world!
  *
  */
-public class App 
+public class SpringCreWithAnnotations
 {
     public static void main( String[] args )
     {

@@ -18,13 +18,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
-      <version>3.1.5</version>
+      <version>3.4.4</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
-      <version>3.1.5</version> <!-- або актуальна -->
+      <version>3.4.4</version> <!-- або актуальна -->
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>

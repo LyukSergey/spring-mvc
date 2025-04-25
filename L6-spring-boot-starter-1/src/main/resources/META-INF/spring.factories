@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationContextInitializer=com.lss.ProfileCheckerApplicationContextInitializer
+org.springframework.boot.env.EnvironmentPostProcessor=com.lss.ProfileDetectorEPP

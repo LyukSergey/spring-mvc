@@ -5,7 +5,7 @@ import com.lss.RavenProperties;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class MyRavenListener extends RavenListener {
 
     public MyRavenListener(RavenProperties ravenProperties) {
