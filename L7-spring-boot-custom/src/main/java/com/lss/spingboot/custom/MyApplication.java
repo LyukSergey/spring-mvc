@@ -24,6 +24,7 @@ import java.util.Map;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 
 public class MyApplication {
@@ -76,10 +77,26 @@ public class MyApplication {
             }
         }
 
+        final Connector connector = new Connector();
+        connector.setPort(8080);
         Tomcat tomcat = new Tomcat();
-        tomcat.setPort(8080);
-        Context ctx = tomcat.addContext("", new File(".").getAbsolutePath());
+        tomcat.setHostname("localhost");
+        String appBase = ".";
+        tomcat.getHost().setAppBase(appBase);
+
+        tomcat.getService().addConnector(connector);
+        File myBaseDir = new File("./my-temp-tomcat-folder");
+        if (!myBaseDir.exists()) {
+            myBaseDir.mkdirs(); // створюємо папку, якщо її немає
+        }
+        Context ctx = tomcat.addContext("", myBaseDir.getAbsolutePath());
         HttpServlet dispatcher = new MyDispatcherServlet(registry);
+
+        Class servletClass = MyDispatcherServlet.class;
+        Tomcat.addServlet(
+                ctx, servletClass.getSimpleName(), servletClass.getName());
+        ctx.addServletMappingDecoded(
+                "/*", servletClass.getSimpleName());
 
         Wrapper servlet = ctx.createWrapper();
         servlet.setName("dispatcher");
