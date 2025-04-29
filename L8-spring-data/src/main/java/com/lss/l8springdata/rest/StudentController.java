@@ -5,6 +5,7 @@ import com.lss.l8springdata.entity.Student;
 import com.lss.l8springdata.entity.StudentStatus;
 import com.lss.l8springdata.service.EnrollmentService;
 import com.lss.l8springdata.service.StudentService;
+import com.lss.l8springdata.sql.QueryCounter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,10 @@ public class StudentController {
 
     @GetMapping
     public ResponseEntity<List<StudentDTO>> getAllStudents() {
-        return ResponseEntity.ok(studentService.findAllDto());
+        QueryCounter.increment();
+        final ResponseEntity<List<StudentDTO>> response = ResponseEntity.ok(studentService.findAllDto());
+        System.out.printf("💡 Total SQL queries: %s%n", QueryCounter.get());
+        return response;
     }
 
     @GetMapping("/search")

@@ -27,10 +27,10 @@ spring:
       minimum-idle: 3
       poolName: pdf-unlocker-pool
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate.jdbc.batch_size: 50
-      hibernate.format_sql: false
+      hibernate.format_sql: true
       hibernate.generate_statistics: false
     hibernate:
       ddl-auto: none
