@@ -1,0 +1,22 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="10" author="sergiiliuk">
+        <insert tableName="enrollment">
+            <column name="id" valueNumeric="1"/>
+            <column name="student_id" valueNumeric="1"/>
+            <column name="course_id" valueNumeric="1"/>
+            <column name="created_at" valueDate="2025-04-28T08:00:00"/>
+        </insert>
+        <insert tableName="enrollment">
+            <column name="id" valueNumeric="2"/>
+            <column name="student_id" valueNumeric="2"/>
+            <column name="course_id" valueNumeric="2"/>
+            <column name="created_at" valueDate="2025-04-28T09:00:00"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

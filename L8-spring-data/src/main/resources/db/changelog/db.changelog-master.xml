@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <include file="db/changelog/001-create-department.xml"/>
+    <include file="db/changelog/002-create-teacher.xml"/>
+    <include file="db/changelog/003-create-course.xml"/>
+    <include file="db/changelog/004-create-student.xml"/>
+    <include file="db/changelog/005-create-enrollment.xml"/>
+
+    <!-- Insert initial data -->
+    <include file="db/changelog/006-insert-departments.xml"/>
+    <include file="db/changelog/007-insert-teachers.xml"/>
+    <include file="db/changelog/008-insert-courses.xml"/>
+    <include file="db/changelog/009-insert-students.xml"/>
+    <include file="db/changelog/010-insert-enrollments.xml"/>
+</databaseChangeLog>
