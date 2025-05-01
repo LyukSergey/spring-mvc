@@ -40,6 +40,22 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>com.lss</groupId>
+            <artifactId>L9-spring-data-jpa-custom-starter</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>4.26.0</version> <!-- актуальна версія на момент написання -->
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -71,6 +87,39 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.40.2</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>postgres:12.4-alpine</name>
+                            <alias>postgres</alias>
+                            <run>
+                                <containerNamePattern>
+                                    L9-spring-data-starter-custom
+                                </containerNamePattern>
+                                <ports>
+                                    <port>5432:5432</port>
+                                </ports>
+                                <env>
+                                    <POSTGRES_USER>myuser</POSTGRES_USER>
+                                    <POSTGRES_PASSWORD>mypass</POSTGRES_PASSWORD>
+                                    <POSTGRES_DB>mydb</POSTGRES_DB>
+                                </env>
+                                <wait>
+                                    <log>database system is ready to accept connections</log>
+                                    <time>10000</time>
+                                </wait>
+                            </run>
+                            <build>
+                                <from>postgres:15</from>
+                            </build>
+                        </image>
+                    </images>
                 </configuration>
             </plugin>
         </plugins>
