@@ -2,7 +2,6 @@ package com.lss.l9springDataJpaCustom.invocationHandler;
 
 import com.lss.l9springDataJpaCustom.methodExecutor.RepositoryMethodExecutor;
 import com.lss.l9springDataJpaCustom.holder.EntityManagerHolder;
-import com.lss.l9springDataJpaCustom.resolver.EntityNameResolver;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.lang.reflect.InvocationHandler;
@@ -25,10 +24,8 @@ public class RepositoryInvocationHandler implements InvocationHandler {
         if (!externalEm) {
             em = emf.createEntityManager();
         }
-        final String entityName = EntityNameResolver.resolve(entityClass);
-
         try {
-            RepositoryMethodExecutor executor = new RepositoryMethodExecutor(em, entityClass, entityName);
+            RepositoryMethodExecutor executor = new RepositoryMethodExecutor(em, entityClass);
             return executor.execute(method, args);
         } finally {
             if (!externalEm) {

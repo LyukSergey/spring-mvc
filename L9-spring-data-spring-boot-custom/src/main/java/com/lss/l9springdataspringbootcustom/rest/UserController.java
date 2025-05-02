@@ -1,7 +1,7 @@
 package com.lss.l9springdataspringbootcustom.rest;
 
 import com.lss.l9springdataspringbootcustom.dto.UserDto;
-import com.lss.l9springdataspringbootcustom.service.impl.UserServiceImpl;
+import com.lss.l9springdataspringbootcustom.service.UserService;
 import com.lss.l9springdataspringbootcustom.entity.Users;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @PostMapping
     public Users createUser(@RequestBody UserDto user) {
