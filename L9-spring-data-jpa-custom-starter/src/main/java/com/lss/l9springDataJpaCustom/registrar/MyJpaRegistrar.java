@@ -2,21 +2,15 @@ package com.lss.l9springDataJpaCustom.registrar;
 
 import com.lss.l9springDataJpaCustom.factoryBean.MyRepositoryFactoryBean;
 import com.lss.l9springDataJpaCustom.annotation.EnableMyJpa;
-import com.lss.l9springDataJpaCustom.factory.MyJpaFactory;
 import com.lss.l9springDataJpaCustom.holder.MyJpaMetadataHolder;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityManagerFactory;
-import java.util.HashSet;
+import com.lss.l9springDataJpaCustom.scaner.EntityScanner;
+import com.lss.l9springDataJpaCustom.scaner.RepositoryScanner;
 import java.util.Map;
 import java.util.Set;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 public class MyJpaRegistrar implements ImportBeanDefinitionRegistrar {
 
@@ -28,59 +22,24 @@ public class MyJpaRegistrar implements ImportBeanDefinitionRegistrar {
             basePackages = new String[]{"com.example.repository"};
         }
 
-        Set<String> entityClasses = new HashSet<>();
-        for (String pkg : basePackages) {
-            entityClasses.addAll(scanForEntities(pkg));
-        }
-        System.out.println("Entities found: " + entityClasses);
+        // Скануємо Entity
+        Set<String> entityClasses = new EntityScanner().scan(basePackages);
         MyJpaMetadataHolder.setEntityClassNames(entityClasses);
 
-        // Регіструємо фабрику (як звичайний Spring bean)
-        registry.registerBeanDefinition("myJpaFactory",
-                BeanDefinitionBuilder.genericBeanDefinition(MyJpaFactory.class).getBeanDefinition());
-        // Регіструємо EntityManagerFactory через factory method
-        BeanDefinitionBuilder emfBuilder = BeanDefinitionBuilder
-                .genericBeanDefinition(EntityManagerFactory.class);
-        emfBuilder.setFactoryMethodOnBean("createEntityManagerFactory", "myJpaFactory");
-        emfBuilder.addConstructorArgReference("dataSource");  // inject DataSource
-        registry.registerBeanDefinition("entityManagerFactory", emfBuilder.getBeanDefinition());
+        // Реєструємо фабрику
+        new EntityManagerFactoryRegistrar().register(registry);
 
-        var scanner = new ClassPathScanningCandidateComponentProvider(false) {
-            @Override
-            protected boolean isCandidateComponent(org.springframework.beans.factory.annotation.AnnotatedBeanDefinition beanDefinition) {
-                return true;
-            }
-        };
-        scanner.addIncludeFilter(new AnnotationTypeFilter(org.springframework.stereotype.Repository.class));
+        // Скануємо Repository
+        Set<Class<?>> repos = new RepositoryScanner().scan(basePackages);
 
-        for (String basePackage : basePackages) {
-            var candidates = scanner.findCandidateComponents(basePackage);
-            for (var candidate : candidates) {
-                try {
-                    Class<?> repoInterface = Class.forName(candidate.getBeanClassName());
-                    GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
-                    beanDefinition.setBeanClass(MyRepositoryFactoryBean.class);
-                    beanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(0, repoInterface);
-                    beanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(1, "entityManagerFactory");
-                    registry.registerBeanDefinition(candidate.getBeanClassName(), beanDefinition);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+        // Реєструємо BeanDefinitions для Repository
+        for (Class<?> repository : repos) {
+            BeanDefinitionBuilder builder = BeanDefinitionBuilder
+                    .genericBeanDefinition(MyRepositoryFactoryBean.class);
+            builder.addConstructorArgValue(repository);
+            builder.addConstructorArgValue("entityManagerFactory");
+            registry.registerBeanDefinition(repository.getName(), builder.getBeanDefinition());
         }
-    }
-
-    private Set<String> scanForEntities(String basePackage) {
-        Set<String> entities = new HashSet<>();
-
-        ClassPathScanningCandidateComponentProvider scanner =
-                new ClassPathScanningCandidateComponentProvider(false);
-        scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
-
-        for (BeanDefinition bd : scanner.findCandidateComponents(basePackage)) {
-            entities.add(bd.getBeanClassName());
-        }
-        return entities;
     }
 
 }

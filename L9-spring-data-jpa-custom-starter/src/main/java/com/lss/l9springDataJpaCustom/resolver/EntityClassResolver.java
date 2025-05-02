@@ -1,5 +1,6 @@
 package com.lss.l9springDataJpaCustom.resolver;
 
+import com.lss.l9springDataJpaCustom.rootRepository.MyJpaRepository;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -9,7 +10,7 @@ public class EntityClassResolver {
         for (Type iface : repoInterface.getGenericInterfaces()) {
             if (iface instanceof ParameterizedType pt) {
                 Class<?> raw = (Class<?>) pt.getRawType();
-                if (raw.getSimpleName().equals("MyJpaRepository")) {
+                if (raw.getSimpleName().equals(MyJpaRepository.class.getSimpleName())) {
                     return (Class<?>) pt.getActualTypeArguments()[0];
                 } else {
                     Class<?> candidate = resolve(raw);
