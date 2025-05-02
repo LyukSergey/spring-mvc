@@ -13,3 +13,10 @@ spring:
     username: myuser
     password: mypass
     driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.web.servlet: DEBUG
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
+    org.springframework.web.servlet.handler.AbstractHandlerMapping: DEBUG

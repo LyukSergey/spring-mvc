@@ -1,6 +1,6 @@
 package com.lss.l9springdataspringbootcustom.rest;
 
-import com.lss.l9springdataspringbootcustom.entity.Post;
+import com.lss.l9springdataspringbootcustom.dto.PostDto;
 import com.lss.l9springdataspringbootcustom.service.impl.PostServiceImpl;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +21,9 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping
-    public Post createPost(@RequestBody Post post) {
-        return postService.createPost(post);
+    @PostMapping("/users/{id}")
+    public PostDto createPost(@PathVariable Long id, @RequestBody PostDto post) {
+        return postService.createPostForUser(id, post);
     }
 
     @DeleteMapping("/{id}")
@@ -32,7 +32,7 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> findAll() {
+    public List<PostDto> findAll() {
         return postService.findAll();
     }
 }

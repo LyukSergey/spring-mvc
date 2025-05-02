@@ -31,8 +31,10 @@ public class MyTransactionAspect {
             Object result = pjp.proceed();
             tx.commit();
             return result;
-        } catch (Exception e) {
-            tx.rollback();
+        } catch (Throwable e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
         } finally {
             EntityManagerHolder.clear();

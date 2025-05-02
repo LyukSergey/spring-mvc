@@ -102,21 +102,14 @@ public class MyRepositoryFactoryBean<T> implements FactoryBean<T>, ApplicationCo
                 }
 
                 if (methodName.equals("save")) {
-                    EntityTransaction tx = em.getTransaction();
-                    tx.begin();
-                    Object merged = em.merge(args[0]);
-                    tx.commit();
-                    return merged;
+                    return em.merge(args[0]);
                 }
 
                 if (methodName.equals("deleteById")) {
-                    EntityTransaction tx = em.getTransaction();
-                    tx.begin();
                     Object entity = em.find(entityClass, args[0]);
                     if (entity != null) {
                         em.remove(entity);
                     }
-                    tx.commit();
                     return null;
                 }
 

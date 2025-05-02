@@ -1,9 +1,8 @@
 package com.lss.l9springdataspringbootcustom.service.impl;
 
 import com.lss.l9springDataJpaCustom.annotation.MyTransactional;
-import com.lss.l9springdataspringbootcustom.dto.PostDto;
+import com.lss.l9springdataspringbootcustom.converters.UserConverter;
 import com.lss.l9springdataspringbootcustom.dto.UserDto;
-import com.lss.l9springdataspringbootcustom.entity.Post;
 import com.lss.l9springdataspringbootcustom.entity.Users;
 import com.lss.l9springdataspringbootcustom.repository.UserRepository;
 import com.lss.l9springdataspringbootcustom.service.UserService;
@@ -20,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @MyTransactional
     public Users saveUser(UserDto user) {
-        return userRepository.save(createUser(user));
+        return userRepository.save(UserConverter.toEntity(user));
     }
 
     @MyTransactional
@@ -29,54 +28,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @MyTransactional
-    public List<UserDto> findAllUsers() {
+    public List<UserDto> findAllUsers(boolean withPosts) {
         final List<Users> users = userRepository.findAll();
-        System.out.println("session is closed now");  // session закривається після repo call
-
-        users.forEach(u -> u.getPosts().size());
         return users.stream()
-                .map(this::convertToDto)
+                .map(user -> UserConverter.toDto(user, withPosts))
                 .toList();
     }
 
     public UserDto findUserById(Long id) {
         return Optional.ofNullable(userRepository.findById(id))
-                .map(this::convertToDto)
+                .map(user -> UserConverter.toDto(user, false))
                 .orElseThrow(() -> new RuntimeException(String.format("User with %s id not found", id)));
     }
 
-    public List<UserDto> findUsersByName(String name) {
+    public List<UserDto> findUsersByName(String name, boolean withPosts) {
         return userRepository.findByName(name).stream()
-                .map(this::convertToDto)
+                .map(user -> UserConverter.toDto(user, withPosts))
                 .toList();
     }
-
-    private UserDto convertToDto(Users user) {
-        final List<PostDto> posts = user.getPosts().stream()
-                .map(UserServiceImpl::convertToPostDto)
-                .toList();
-        return UserDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .posts(posts)
-                .build();
-    }
-
-    private static PostDto convertToPostDto(Post post) {
-        return PostDto.builder()
-                .title(post.getTitle())
-                .content(post.getContent())
-                .build();
-    }
-
-    private Users createUser(UserDto dto) {
-        return Users.builder()
-                .name(dto.getName())
-                .email(dto.getEmail())
-                .build();
-
-    }
-
 
 }

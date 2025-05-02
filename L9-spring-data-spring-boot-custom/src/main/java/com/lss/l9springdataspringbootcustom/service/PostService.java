@@ -1,13 +1,13 @@
 package com.lss.l9springdataspringbootcustom.service;
 
-import com.lss.l9springdataspringbootcustom.entity.Post;
+import com.lss.l9springdataspringbootcustom.dto.PostDto;
 import java.util.List;
 
 public interface PostService {
 
-    Post createPost(Post post);
+    PostDto createPostForUser(Long userId, PostDto dto);
 
     void deletePost(Long id);
 
-    List<Post> findAll();
+    List<PostDto> findAll();
 }

@@ -10,9 +10,9 @@ public interface UserService {
 
     void deleteUser(Long id);
 
-    List<UserDto> findAllUsers();
+    List<UserDto> findAllUsers(boolean withPosts);
 
     UserDto findUserById(Long id);
 
-    List<UserDto> findUsersByName(String name);
+    List<UserDto> findUsersByName(String name, boolean withPosts);
 }
