@@ -1,4 +1,4 @@
-package com.lss.l9springDataJpaCustom;
+package com.lss.l9springDataJpaCustom.unit;
 
 import jakarta.persistence.SharedCacheMode;
 import jakarta.persistence.ValidationMode;

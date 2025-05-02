@@ -1,5 +1,9 @@
-package com.lss.l9springDataJpaCustom;
+package com.lss.l9springDataJpaCustom.registrar;
 
+import com.lss.l9springDataJpaCustom.factoryBean.MyRepositoryFactoryBean;
+import com.lss.l9springDataJpaCustom.annotation.EnableMyJpa;
+import com.lss.l9springDataJpaCustom.factory.MyJpaFactory;
+import com.lss.l9springDataJpaCustom.holder.MyJpaMetadataHolder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.HashSet;

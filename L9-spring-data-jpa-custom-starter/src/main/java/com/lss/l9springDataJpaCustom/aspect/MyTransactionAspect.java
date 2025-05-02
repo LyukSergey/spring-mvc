@@ -1,5 +1,6 @@
-package com.lss.l9springDataJpaCustom;
+package com.lss.l9springDataJpaCustom.aspect;
 
+import com.lss.l9springDataJpaCustom.holder.EntityManagerHolder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -20,7 +21,7 @@ public class MyTransactionAspect {
         this.emf = emf;
     }
 
-    @Around("@annotation(MyTransactional)")
+    @Around("@annotation(com.lss.l9springDataJpaCustom.annotation.MyTransactional)")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         EntityManager em = emf.createEntityManager();
         EntityManagerHolder.set(em);

@@ -1,6 +1,6 @@
 package com.lss.l9springdataspringbootcustom;
 
-import com.lss.l9springDataJpaCustom.MyTransactional;
+import com.lss.l9springDataJpaCustom.annotation.MyTransactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

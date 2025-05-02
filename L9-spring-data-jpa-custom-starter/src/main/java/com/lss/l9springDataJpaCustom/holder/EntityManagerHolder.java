@@ -1,4 +1,4 @@
-package com.lss.l9springDataJpaCustom;
+package com.lss.l9springDataJpaCustom.holder;
 
 import jakarta.persistence.EntityManager;
 

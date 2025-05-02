@@ -1,6 +1,6 @@
 package com.lss.l9springdataspringbootcustom;
 
-import com.lss.l9springDataJpaCustom.MyJpaRepository;
+import com.lss.l9springDataJpaCustom.rootRepository.MyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository

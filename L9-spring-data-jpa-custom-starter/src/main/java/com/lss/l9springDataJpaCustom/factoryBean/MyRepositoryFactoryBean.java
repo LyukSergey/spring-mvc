@@ -1,5 +1,6 @@
-package com.lss.l9springDataJpaCustom;
+package com.lss.l9springDataJpaCustom.factoryBean;
 
+import com.lss.l9springDataJpaCustom.holder.EntityManagerHolder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

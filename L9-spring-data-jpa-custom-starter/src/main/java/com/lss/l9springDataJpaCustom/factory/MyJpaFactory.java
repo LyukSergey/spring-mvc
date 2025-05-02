@@ -1,5 +1,7 @@
-package com.lss.l9springDataJpaCustom;
+package com.lss.l9springDataJpaCustom.factory;
 
+import com.lss.l9springDataJpaCustom.unit.PersistenceUnitInfoImpl;
+import com.lss.l9springDataJpaCustom.holder.MyJpaMetadataHolder;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.spi.PersistenceUnitInfo;
 import java.util.HashMap;

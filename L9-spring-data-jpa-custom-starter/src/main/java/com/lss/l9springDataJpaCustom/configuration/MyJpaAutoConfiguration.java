@@ -1,4 +1,4 @@
-package com.lss.l9springDataJpaCustom;
+package com.lss.l9springDataJpaCustom.configuration;
 
 import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;

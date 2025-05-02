@@ -1,6 +1,6 @@
 package com.lss.l9springdataspringbootcustom;
 
-import com.lss.l9springDataJpaCustom.EnableMyJpa;
+import com.lss.l9springDataJpaCustom.annotation.EnableMyJpa;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

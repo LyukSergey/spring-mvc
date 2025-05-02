@@ -1,5 +1,6 @@
-package com.lss.l9springDataJpaCustom;
+package com.lss.l9springDataJpaCustom.configuration;
 
+import com.lss.l9springDataJpaCustom.aspect.MyTransactionAspect;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
