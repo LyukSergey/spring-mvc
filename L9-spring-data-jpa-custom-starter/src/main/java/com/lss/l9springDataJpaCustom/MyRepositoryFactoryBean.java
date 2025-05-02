@@ -3,11 +3,13 @@ package com.lss.l9springDataJpaCustom;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
+import java.util.List;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -60,11 +62,10 @@ public class MyRepositoryFactoryBean<T> implements FactoryBean<T>, ApplicationCo
     @Override
     public T getObject() {
         EntityManagerFactory emf = applicationContext.getBean(entityManagerFactoryBeanName, EntityManagerFactory.class);
-        EntityManager em = emf.createEntityManager();
         return (T) Proxy.newProxyInstance(
                 repositoryInterface.getClassLoader(),
                 new Class[]{repositoryInterface},
-                new RepositoryInvocationHandler(em, entityClass)
+                new RepositoryInvocationHandler(emf, entityClass)
         );
     }
 
@@ -75,38 +76,86 @@ public class MyRepositoryFactoryBean<T> implements FactoryBean<T>, ApplicationCo
 
     static class RepositoryInvocationHandler implements InvocationHandler {
 
-        private final EntityManager em;
+        private final EntityManagerFactory myJpaFactory;
         private final Class<?> entityClass;
 
-        RepositoryInvocationHandler(EntityManager em, Class<?> entityClass) {
-            this.em = em;
+        RepositoryInvocationHandler(EntityManagerFactory emf, Class<?> entityClass) {
+            this.myJpaFactory = emf;
             this.entityClass = entityClass;
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            String methodName = method.getName();
-            String entityName = entityClass.getSimpleName();
-            Entity entityAnnotation = entityClass.getAnnotation(Entity.class);
-            if (entityAnnotation != null && !entityAnnotation.name().isEmpty()) {
-                entityName = entityAnnotation.name();
+            EntityManager em = EntityManagerHolder.get();
+            boolean isExternalEm = true;
+            if (em == null) {
+                em = myJpaFactory.createEntityManager();
+                isExternalEm = false;
             }
+            try {
+                String methodName = method.getName();
+                String entityName = entityClass.getSimpleName();
+                Entity entityAnnotation = entityClass.getAnnotation(Entity.class);
+                if (entityAnnotation != null && !entityAnnotation.name().isEmpty()) {
+                    entityName = entityAnnotation.name();
+                }
 
-            if (methodName.equals("findAll")) {
-                return em.createQuery("SELECT e FROM " + entityName + " e", entityClass).getResultList();
+                if (methodName.equals("save")) {
+                    EntityTransaction tx = em.getTransaction();
+                    tx.begin();
+                    Object merged = em.merge(args[0]);
+                    tx.commit();
+                    return merged;
+                }
+
+                if (methodName.equals("deleteById")) {
+                    EntityTransaction tx = em.getTransaction();
+                    tx.begin();
+                    Object entity = em.find(entityClass, args[0]);
+                    if (entity != null) {
+                        em.remove(entity);
+                    }
+                    tx.commit();
+                    return null;
+                }
+
+                if (methodName.equals("findAll")) {
+                    return em.createQuery("SELECT e FROM " + entityName + " e", entityClass).getResultList();
+                }
+
+                if (methodName.equals("findById")) {
+                    return em.find(entityClass, args[0]);
+                }
+
+                if (methodName.startsWith("findBy")) {
+                    String fieldsPart = methodName.substring(6);
+                    String[] parts = fieldsPart.split("And");
+                    StringBuilder jpql = new StringBuilder("SELECT e FROM " + entityName + " e WHERE ");
+                    for (int i = 0; i < parts.length; i++) {
+                        String field = Character.toLowerCase(parts[i].charAt(0)) + parts[i].substring(1);
+                        if (i > 0) {
+                            jpql.append(" AND ");
+                        }
+                        jpql.append("e.").append(field).append(" = :param").append(i);
+                    }
+                    var query = em.createQuery(jpql.toString(), entityClass);
+                    for (int i = 0; i < parts.length; i++) {
+                        query.setParameter("param" + i, args[i]);
+                    }
+                    if (method.getReturnType().isAssignableFrom(List.class)) {
+                        return query.getResultList();
+                    } else {
+                        return query.getSingleResult();
+                    }
+                }
+
+                throw new UnsupportedOperationException("Method not supported: " + methodName);
+
+            } finally {
+                if (!isExternalEm) {
+                    em.close();
+                }
             }
-            if (methodName.equals("findById")) {
-                return em.find(entityClass, args[0]);
-            }
-            if (methodName.startsWith("findBy")) {
-                String field = methodName.substring(6);
-                String jpql = "SELECT e FROM " + entityName + " e WHERE e." +
-                        Character.toLowerCase(field.charAt(0)) + field.substring(1) + " = :param";
-                return em.createQuery(jpql, entityClass)
-                        .setParameter("param", args[0])
-                        .getResultList();
-            }
-            throw new UnsupportedOperationException("Method not supported: " + methodName);
         }
 
     }

@@ -1,1 +1,2 @@
 com.lss.l9springDataJpaCustom.MyJpaAutoConfiguration
+com.lss.l9springDataJpaCustom.MyJpaTransactionAutoConfiguration

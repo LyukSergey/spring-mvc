@@ -23,6 +23,7 @@ public class MyTransactionAspect {
     @Around("@annotation(MyTransactional)")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         EntityManager em = emf.createEntityManager();
+        EntityManagerHolder.set(em);
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
@@ -33,6 +34,7 @@ public class MyTransactionAspect {
             tx.rollback();
             throw e;
         } finally {
+            EntityManagerHolder.clear();
             em.close();
         }
     }

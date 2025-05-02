@@ -16,7 +16,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="2" author="dev">
+    <changeSet id="2" author="sergiiliuk">
         <insert tableName="users">
             <column name="name" value="Alice"/>
             <column name="email" value="alice@example.com"/>
@@ -56,6 +56,32 @@
         <insert tableName="users">
             <column name="name" value="Jack"/>
             <column name="email" value="jack@example.com"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="3" author="sergiiliuk">
+        <createTable tableName="posts">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="content" type="TEXT"/>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_posts_users" references="users(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="sergiiliuk">
+        <insert tableName="posts">
+            <column name="title" value="First Post"/>
+            <column name="content" value="Hello world!"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="posts">
+            <column name="title" value="Another Post"/>
+            <column name="content" value="Some content"/>
+            <column name="user_id" valueNumeric="2"/>
         </insert>
     </changeSet>
 
