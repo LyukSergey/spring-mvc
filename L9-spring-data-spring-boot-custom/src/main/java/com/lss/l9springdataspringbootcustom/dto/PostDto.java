@@ -1,6 +1,5 @@
-package com.lss.l9springdataspringbootcustom;
+package com.lss.l9springdataspringbootcustom.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,10 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class PostDto {
 
     private Long id;
-    private String name;
-    private String email;
-    private List<PostDto> posts;
+    private String title;
+    private String content;
+
 }

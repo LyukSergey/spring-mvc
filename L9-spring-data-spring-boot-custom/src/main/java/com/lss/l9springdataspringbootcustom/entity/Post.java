@@ -1,4 +1,4 @@
-package com.lss.l9springdataspringbootcustom;
+package com.lss.l9springdataspringbootcustom.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

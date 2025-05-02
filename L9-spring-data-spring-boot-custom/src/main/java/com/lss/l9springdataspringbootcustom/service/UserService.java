@@ -1,5 +1,7 @@
-package com.lss.l9springdataspringbootcustom;
+package com.lss.l9springdataspringbootcustom.service;
 
+import com.lss.l9springdataspringbootcustom.dto.UserDto;
+import com.lss.l9springdataspringbootcustom.entity.Users;
 import java.util.List;
 
 public interface UserService {
