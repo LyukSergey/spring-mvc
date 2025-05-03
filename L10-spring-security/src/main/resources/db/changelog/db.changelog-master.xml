@@ -1,0 +1,121 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="1" author="sergiiliuk">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="posts">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="content" type="TEXT"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseColumnNames="user_id"
+            baseTableName="posts"
+            constraintName="fk_post_user"
+            referencedColumnNames="id"
+            referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="create-posts-sequence" author="sergiiliuk">
+        <createSequence sequenceName="posts_sequence" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="create-user-sequence" author="sergiiliuk">
+        <createSequence sequenceName="user_sequence" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <!-- Додавання користувачів -->
+    <changeSet id="1-insert-users" author="sergiiliuk">
+        <insert tableName="users">
+            <column name="id" valueNumeric="1"/>
+            <column name="username" value="Alice"/>
+            <column name="email" value="alice@example.com"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" valueNumeric="2"/>
+            <column name="username" value="Bob"/>
+            <column name="email" value="bob@example.com"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" valueNumeric="3"/>
+            <column name="username" value="Charlie"/>
+            <column name="email" value="charlie@example.com"/>
+        </insert>
+    </changeSet>
+
+    <!-- Додавання постів -->
+    <changeSet id="2-insert-posts" author="sergiiliuk">
+        <insert tableName="posts">
+            <column name="id" valueNumeric="1"/>
+            <column name="title" value="Alice Post 1"/>
+            <column name="content" value="Content of Alice post 1"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="posts">
+            <column name="id" valueNumeric="2"/>
+            <column name="title" value="Alice Post 2"/>
+            <column name="content" value="Content of Alice post 2"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="posts">
+            <column name="id" valueNumeric="3"/>
+            <column name="title" value="Alice Post 3"/>
+            <column name="content" value="Content of Alice post 3"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="posts">
+            <column name="id" valueNumeric="4"/>
+            <column name="title" value="Bob Post 1"/>
+            <column name="content" value="Content of Bob post 1"/>
+            <column name="user_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="posts">
+            <column name="id" valueNumeric="5"/>
+            <column name="title" value="Bob Post 2"/>
+            <column name="content" value="Content of Bob post 2"/>
+            <column name="user_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="posts">
+            <column name="id" valueNumeric="6"/>
+            <column name="title" value="Bob Post 3"/>
+            <column name="content" value="Content of Bob post 3"/>
+            <column name="user_id" valueNumeric="2"/>
+        </insert>
+
+        <insert tableName="posts">
+            <column name="id" valueNumeric="7"/>
+            <column name="title" value="Charlie Post 1"/>
+            <column name="content" value="Content of Charlie post 1"/>
+            <column name="user_id" valueNumeric="3"/>
+        </insert>
+        <insert tableName="posts">
+            <column name="id" valueNumeric="8"/>
+            <column name="title" value="Charlie Post 2"/>
+            <column name="content" value="Content of Charlie post 2"/>
+            <column name="user_id" valueNumeric="3"/>
+        </insert>
+        <insert tableName="posts">
+            <column name="id" valueNumeric="9"/>
+            <column name="title" value="Charlie Post 3"/>
+            <column name="content" value="Content of Charlie post 3"/>
+            <column name="user_id" valueNumeric="3"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
