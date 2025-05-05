@@ -1,6 +1,6 @@
 package com.lss.l10springsecurity.rest;
 
-import com.lss.l10springsecurity.entity.Post;
+import com.lss.l10springsecurity.dto.PostDto;
 import com.lss.l10springsecurity.service.PostService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,12 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/user/{userId}")
-    public Post createPost(@PathVariable Long userId, @RequestBody Post post) {
+    public PostDto createPost(@PathVariable Long userId, @RequestBody PostDto post) {
         return postService.createPost(userId, post);
     }
 
     @GetMapping("/user/{userId}")
-    public List<Post> getUserPosts(@PathVariable Long userId) {
+    public List<PostDto> getUserPosts(@PathVariable Long userId) {
         return postService.getPostsByUser(userId);
     }
 }

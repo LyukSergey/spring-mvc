@@ -1,7 +1,9 @@
 package com.lss.l10springsecurity.service;
 
+import com.lss.l10springsecurity.dto.PostDto;
 import com.lss.l10springsecurity.entity.Post;
 import com.lss.l10springsecurity.entity.User;
+import com.lss.l10springsecurity.mapper.PostMapper;
 import com.lss.l10springsecurity.repository.PostRepository;
 import com.lss.l10springsecurity.repository.UserRepository;
 import java.util.List;
@@ -15,17 +17,24 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostMapper postMapper;
 
     @PreAuthorize("hasRole('admin')")
-    public Post createPost(Long userId, Post post) {
+    public PostDto createPost(Long userId, PostDto postDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Post post = postMapper.toEntity(postDto);
         post.setUser(user);
-        return postRepository.save(post);
+
+        Post savedPost = postRepository.save(post);
+        return postMapper.toDto(savedPost);
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'moderator')")
-    public List<Post> getPostsByUser(Long userId) {
-        return postRepository.findByUserId(userId);
+    @PreAuthorize("hasAnyRole('moderator')")
+    public List<PostDto> getPostsByUser(Long userId) {
+        return postRepository.findByUserId(userId).stream()
+                .map(postMapper::toDto)
+                .toList();
     }
 }

@@ -1,9 +1,8 @@
 package com.lss.l10springsecurity.rest;
 
-import com.lss.l10springsecurity.entity.User;
+import com.lss.l10springsecurity.dto.UserDto;
 import com.lss.l10springsecurity.service.UserService;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,12 +17,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<User> getAll() {
+    public List<UserDto> getAll() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getById(@PathVariable Long id) {
+    public UserDto getById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 }
