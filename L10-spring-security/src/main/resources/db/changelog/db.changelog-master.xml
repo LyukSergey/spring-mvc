@@ -1,121 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
-        http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+       http://www.liquibase.org/xml/ns/dbchangelog
+       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
+    <!-- 1️⃣ Створити таблицю users -->
     <changeSet id="1" author="sergiiliuk">
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="username" type="VARCHAR(255)"/>
-            <column name="email" type="VARCHAR(255)"/>
+            <column name="username" type="VARCHAR(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+    </changeSet>
 
+    <!-- 2️⃣ Створити таблицю roles -->
+    <changeSet id="2" author="sergiiliuk">
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 3️⃣ Створити таблицю user_roles (many-to-many) -->
+    <changeSet id="3" author="sergiiliuk">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 4️⃣ Додати foreign keys для user_roles -->
+    <changeSet id="4" author="sergiiliuk">
+        <addForeignKeyConstraint constraintName="fk_user_roles_user"
+            baseTableName="user_roles" baseColumnNames="user_id"
+            referencedTableName="users" referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="fk_user_roles_role"
+            baseTableName="user_roles" baseColumnNames="role_id"
+            referencedTableName="roles" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- 5️⃣ Створити таблицю posts -->
+    <changeSet id="5" author="sergiiliuk">
         <createTable tableName="posts">
             <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="title" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
             <column name="content" type="TEXT"/>
-            <column name="user_id" type="BIGINT"/>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+    </changeSet>
 
+    <!-- 6️⃣ Додати foreign key до posts -->
+    <changeSet id="6" author="sergiiliuk">
         <addForeignKeyConstraint
-            baseColumnNames="user_id"
             baseTableName="posts"
-            constraintName="fk_post_user"
-            referencedColumnNames="id"
-            referencedTableName="users"/>
+            baseColumnNames="user_id"
+            constraintName="fk_posts_users"
+            referencedTableName="users"
+            referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="create-posts-sequence" author="sergiiliuk">
-        <createSequence sequenceName="posts_sequence" startValue="1" incrementBy="1"/>
-    </changeSet>
-
-    <changeSet id="create-user-sequence" author="sergiiliuk">
-        <createSequence sequenceName="user_sequence" startValue="1" incrementBy="1"/>
-    </changeSet>
-
-    <!-- Додавання користувачів -->
-    <changeSet id="1-insert-users" author="sergiiliuk">
+    <!-- 7️⃣ Додати тестові дані для users -->
+    <changeSet id="7" author="sergiiliuk">
         <insert tableName="users">
             <column name="id" valueNumeric="1"/>
-            <column name="username" value="Alice"/>
-            <column name="email" value="alice@example.com"/>
+            <column name="username" value="user1"/>
+            <column name="email" value="user1@example.com"/>
+            <column name="password" value="pass1"/>
         </insert>
         <insert tableName="users">
             <column name="id" valueNumeric="2"/>
-            <column name="username" value="Bob"/>
-            <column name="email" value="bob@example.com"/>
+            <column name="username" value="user2"/>
+            <column name="email" value="user2@example.com"/>
+            <column name="password" value="pass2"/>
         </insert>
         <insert tableName="users">
             <column name="id" valueNumeric="3"/>
-            <column name="username" value="Charlie"/>
-            <column name="email" value="charlie@example.com"/>
+            <column name="username" value="user3"/>
+            <column name="email" value="user3@example.com"/>
+            <column name="password" value="pass3"/>
         </insert>
     </changeSet>
 
-    <!-- Додавання постів -->
-    <changeSet id="2-insert-posts" author="sergiiliuk">
+    <!-- 8️⃣ Додати тестові дані для roles -->
+    <changeSet id="8" author="sergiiliuk">
+        <insert tableName="roles">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="admin"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="moderator"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="user"/>
+        </insert>
+    </changeSet>
+
+    <!-- 9️⃣ Призначити ролі користувачам -->
+    <changeSet id="9" author="sergiiliuk">
+        <!-- user1 → admin -->
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="1"/>
+            <column name="role_id" valueNumeric="1"/>
+        </insert>
+
+        <!-- user2 → moderator -->
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="2"/>
+            <column name="role_id" valueNumeric="2"/>
+        </insert>
+
+        <!-- user3 → user -->
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="3"/>
+            <column name="role_id" valueNumeric="3"/>
+        </insert>
+    </changeSet>
+
+    <!-- 🔟 Додати тестові дані для posts -->
+    <changeSet id="10" author="sergiiliuk">
         <insert tableName="posts">
             <column name="id" valueNumeric="1"/>
-            <column name="title" value="Alice Post 1"/>
-            <column name="content" value="Content of Alice post 1"/>
+            <column name="title" value="Post 1 User 1"/>
+            <column name="content" value="Content 1"/>
             <column name="user_id" valueNumeric="1"/>
         </insert>
         <insert tableName="posts">
             <column name="id" valueNumeric="2"/>
-            <column name="title" value="Alice Post 2"/>
-            <column name="content" value="Content of Alice post 2"/>
+            <column name="title" value="Post 2 User 1"/>
+            <column name="content" value="Content 2"/>
             <column name="user_id" valueNumeric="1"/>
         </insert>
         <insert tableName="posts">
             <column name="id" valueNumeric="3"/>
-            <column name="title" value="Alice Post 3"/>
-            <column name="content" value="Content of Alice post 3"/>
+            <column name="title" value="Post 3 User 1"/>
+            <column name="content" value="Content 3"/>
             <column name="user_id" valueNumeric="1"/>
         </insert>
 
         <insert tableName="posts">
             <column name="id" valueNumeric="4"/>
-            <column name="title" value="Bob Post 1"/>
-            <column name="content" value="Content of Bob post 1"/>
+            <column name="title" value="Post 1 User 2"/>
+            <column name="content" value="Content 1"/>
             <column name="user_id" valueNumeric="2"/>
         </insert>
         <insert tableName="posts">
             <column name="id" valueNumeric="5"/>
-            <column name="title" value="Bob Post 2"/>
-            <column name="content" value="Content of Bob post 2"/>
+            <column name="title" value="Post 2 User 2"/>
+            <column name="content" value="Content 2"/>
             <column name="user_id" valueNumeric="2"/>
         </insert>
         <insert tableName="posts">
             <column name="id" valueNumeric="6"/>
-            <column name="title" value="Bob Post 3"/>
-            <column name="content" value="Content of Bob post 3"/>
+            <column name="title" value="Post 3 User 2"/>
+            <column name="content" value="Content 3"/>
             <column name="user_id" valueNumeric="2"/>
         </insert>
 
         <insert tableName="posts">
             <column name="id" valueNumeric="7"/>
-            <column name="title" value="Charlie Post 1"/>
-            <column name="content" value="Content of Charlie post 1"/>
+            <column name="title" value="Post 1 User 3"/>
+            <column name="content" value="Content 1"/>
             <column name="user_id" valueNumeric="3"/>
         </insert>
         <insert tableName="posts">
             <column name="id" valueNumeric="8"/>
-            <column name="title" value="Charlie Post 2"/>
-            <column name="content" value="Content of Charlie post 2"/>
+            <column name="title" value="Post 2 User 3"/>
+            <column name="content" value="Content 2"/>
             <column name="user_id" valueNumeric="3"/>
         </insert>
         <insert tableName="posts">
             <column name="id" valueNumeric="9"/>
-            <column name="title" value="Charlie Post 3"/>
-            <column name="content" value="Content of Charlie post 3"/>
+            <column name="title" value="Post 3 User 3"/>
+            <column name="content" value="Content 3"/>
             <column name="user_id" valueNumeric="3"/>
         </insert>
     </changeSet>
-
 </databaseChangeLog>

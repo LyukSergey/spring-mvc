@@ -20,3 +20,10 @@ keycloak:
   credentials:
     secret: demo-client-secret
   bearer-only: true
+
+
+jwt:
+  client-id: L10-spring-security-client
+  secret: srOsItsXEzCSM2KcZYdC461YL8nI3sLYUGgfqyrVADnf0rRzb/hnN1FjR/NpDM54JCNKYnrqLiVRiXU1dVm64Q==
+  admin-secret: gowlXBXCU2XhzuJVrQIa4gXtiArmBBep
+  admin-client-id: admin-client
