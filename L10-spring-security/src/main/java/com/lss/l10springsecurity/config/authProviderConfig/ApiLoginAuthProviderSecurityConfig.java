@@ -23,7 +23,7 @@ public class ApiLoginAuthProviderSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, MyCustomAuthProvider customProvider) throws Exception {
+    public AuthenticationManager authenticationManager(MyCustomAuthProvider customProvider) {
         return new ProviderManager(customProvider);
     }
 }
