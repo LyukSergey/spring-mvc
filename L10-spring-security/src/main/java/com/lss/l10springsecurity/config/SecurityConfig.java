@@ -2,13 +2,6 @@ package com.lss.l10springsecurity.config;
 
 import com.lss.l10springsecurity.security.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;

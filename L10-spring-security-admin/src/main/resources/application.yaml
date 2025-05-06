@@ -1,0 +1,11 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: L10-spring-security-admin
+
+security:
+  realm: ${KEY_CLOCK_REALM:L10-spring-security-admin-realm}
+  key-clock-url: ${KEY_CLOCK_URL:http://localhost:8081}
+  certs: ${security.key-clock-url}/realms/${security.realm}/protocol/openid-connect/certs
