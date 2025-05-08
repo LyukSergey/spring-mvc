@@ -20,4 +20,6 @@ public class SecurityProperty {
     private String usersUrl;
     private String userRolesUrl;
     private String clientIdUrl;
+    private String userGroupUrl;
+    private String userGroupRolesUrl;
 }

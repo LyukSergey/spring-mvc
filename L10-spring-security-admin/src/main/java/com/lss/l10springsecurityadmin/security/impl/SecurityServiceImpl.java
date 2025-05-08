@@ -1,25 +1,26 @@
-package com.lss.l10springsecurityadmin.service.impl;
+package com.lss.l10springsecurityadmin.security.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lss.l10springsecurityadmin.clients.HttpClientService;
-import com.lss.l10springsecurityadmin.service.KeyClockSecurityService;
+import com.lss.l10springsecurityadmin.security.SecurityService;
 import com.lss.l10springsecurityadmin.config.properties.SecurityProperty;
 import java.net.URLEncoder;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimAccessor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KeyClockSecurityServiceImpl implements KeyClockSecurityService {
+public class SecurityServiceImpl implements SecurityService {
 
     public static final String ACCESS_TOKEN = "access_token";
 
@@ -36,22 +37,13 @@ public class KeyClockSecurityServiceImpl implements KeyClockSecurityService {
     }
 
     @Override
-    public String getClientName() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
-            return Optional.ofNullable(jwtAuth.getToken())
-                    .map(jwt -> jwt.getClaim("azp"))
-                    .filter(Objects::nonNull)
-                    .map(object -> (String) object)
-                    .orElseThrow(() -> new RuntimeException("Sub is not present in the token"));
-        }
-        throw new RuntimeException("Token is not JwtAuthenticationToken");
-    }
-
-    @Override
-    public String getClientId(String clientName) {
-        httpClientService.get(securityProperties.getClientIdUrl(), clientName);
-        return "";
+    public String getUserId() {
+        return Optional.ofNullable(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .map(Authentication::getPrincipal)
+                .map(object -> (Jwt) object)
+                .map(JwtClaimAccessor::getSubject)
+                .orElseThrow(() -> new RuntimeException("User id was not found"));
     }
 
     private String getToken(HttpResponse<String> response) {

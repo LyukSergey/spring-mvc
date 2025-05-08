@@ -16,3 +16,5 @@ security:
   users-url:  ${security.key-clock-url}/admin/realms/${security.realm}/users
   user-roles-url: ${security.key-clock-url}/admin/realms/${security.realm}/users/%s/role-mappings/clients/%s
   client-id-url: ${security.key-clock-url}/admin/realms/${security.realm}/clients?clientId=%s
+  user-group-url: ${security.key-clock-url}/admin/realms/${security.realm}/users/%s/groups
+  user-group-roles-url: ${security.key-clock-url}/admin/realms/${security.realm}/groups/%s/role-mappings
