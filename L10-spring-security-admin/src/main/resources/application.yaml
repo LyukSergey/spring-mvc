@@ -6,6 +6,13 @@ spring:
     name: L10-spring-security-admin
 
 security:
+  key-clock-client-id: ${KEY_CLOCK_CLIENT_ID:L10-spring-security-admin-client-2}
+  key-user-clock-client-id: ${KEY_CLOCK_CLIENT_ID:L10-spring-security-admin-client-2}
+  key-clock-client-secret: ${KEY_CLOCK_CLIENT_SECRET:InOJluLQ5G10CR1gQGWbYy2wAJjIthaJ}
   realm: ${KEY_CLOCK_REALM:L10-spring-security-admin-realm}
   key-clock-url: ${KEY_CLOCK_URL:http://localhost:8081}
   certs: ${security.key-clock-url}/realms/${security.realm}/protocol/openid-connect/certs
+  token-url: ${security.key-clock-url}/realms/${security.realm}/protocol/openid-connect/token
+  users-url:  ${security.key-clock-url}/admin/realms/${security.realm}/users
+  user-roles-url: ${security.key-clock-url}/admin/realms/${security.realm}/users/%s/role-mappings/clients/%s
+  client-id-url: ${security.key-clock-url}/admin/realms/${security.realm}/clients?clientId=%s

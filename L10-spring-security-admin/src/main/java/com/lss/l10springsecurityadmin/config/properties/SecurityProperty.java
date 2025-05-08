@@ -14,4 +14,10 @@ public class SecurityProperty {
     private String realm;
     private String keyClockUrl;
     private String certs;
+    private String tokenUrl;
+    private String keyClockClientId;
+    private String keyClockClientSecret;
+    private String usersUrl;
+    private String userRolesUrl;
+    private String clientIdUrl;
 }
