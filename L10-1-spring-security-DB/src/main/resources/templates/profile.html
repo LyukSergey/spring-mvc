@@ -1,0 +1,83 @@
+<!-- profile.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ff758c, #ff7eb3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .user-card {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #ff758c;
+      text-decoration: none;
+    }
+  </style>
+  <script>
+    window.onload = async function () {
+      const container = document.getElementById('userInfo');
+      try {
+        const currentUser = await fetch('/users/me');
+        if (!currentUser.ok) throw new Error("/users/me failed");
+        const userData = await currentUser.json();
+
+        const roleAdmin = userData.roles && userData.roles.some(r => r.includes('ROLE_ADMIN'));
+
+        const userList = roleAdmin
+            ? await fetch('/users/admin')
+            : { ok: true, json: async () => [userData] };
+
+        if (!userList.ok) throw new Error("Unable to load user list");
+        const allUsers = await userList.json();
+
+        allUsers.forEach(user => {
+          const card = document.createElement('div');
+          card.className = 'user-card';
+          card.textContent = JSON.stringify(user, null, 2);
+          container.appendChild(card);
+        });
+      } catch (e) {
+        container.innerHTML = '<div class="user-card">Error: ' + e + '</div>';
+      }
+    }
+  </script>
+</head>
+<body>
+<div class="container">
+  <h1>User Profile</h1>
+  <div id="userInfo">Loading...</div>
+  <a href="/logout">Logout</a>
+</div>
+</body>
+</html>

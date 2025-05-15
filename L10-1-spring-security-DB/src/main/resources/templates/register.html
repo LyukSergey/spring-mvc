@@ -1,0 +1,95 @@
+<!-- register.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #43cea2, #185a9d);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    form {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 360px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, button {
+      padding: 12px;
+      margin-top: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      background: #185a9d;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #12457c;
+    }
+
+    p {
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    a {
+      color: #185a9d;
+      text-decoration: none;
+    }
+  </style>
+  <script>
+    async function registerUser(event) {
+      event.preventDefault();
+      const formData = {
+        username: document.getElementById("username").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+      };
+      const response = await fetch("/auth/register", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(formData)
+      });
+      if (response.ok) {
+        alert("Registration successful! Check your email.");
+      } else {
+        alert("Registration failed.");
+      }
+    }
+  </script>
+</head>
+<body>
+<form onsubmit="registerUser(event)">
+  <h2 style="text-align:center; margin-bottom: 20px;">Register</h2>
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" required>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" required>
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required>
+
+  <button type="submit">Register</button>
+
+  <p>Already have an account? <a href="/login">Login here</a></p>
+</form>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="sergiiliuk">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="user_roles">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="fk_user_roles_user"
+            baseTableName="user_roles" baseColumnNames="user_id"
+            referencedTableName="users" referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="fk_user_roles_role"
+            baseTableName="user_roles" baseColumnNames="role_id"
+            referencedTableName="roles" referencedColumnNames="id"/>
+
+        <!-- <sqlFile ... /> — інструкція Liquibase для виконання SQL-файлу під час міграції.
+            dbms="postgresql" — цей скрипт буде виконано лише для бази даних PostgreSQL.
+            path="init_db.sql" — шлях до SQL-файлу, який потрібно виконати (відносно поточного changelog-файлу).
+            relativeToChangelogFile="true" — шлях до файлу вказано відносно розташування changelog-файлу.
+            splitStatements="false" — не розбивати SQL-скрипт на окремі оператори; виконати як є.
+            Це дозволяє додати кастомний SQL-код до міграції, наприклад, для початкового наповнення таблиць. -->
+        <sqlFile dbms="postgresql" path="init_db.sql" relativeToChangelogFile="true" splitStatements="false"/>
+    </changeSet>
+
+</databaseChangeLog>
