@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2" author="sergiiliuk">
+        <insert tableName="product">
+            <column name="name" value="Smartphone X"/>
+            <column name="description" value="High-end smartphone"/>
+            <column name="price" valueNumeric="899.99"/>
+            <column name="internal_code" value="INT-X001"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Laptop Z"/>
+            <column name="description" value="Powerful laptop for professionals"/>
+            <column name="price" valueNumeric="1499.99"/>
+            <column name="internal_code" value="INT-Z002"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Tablet Pro"/>
+            <column name="description" value="Portable and powerful tablet"/>
+            <column name="price" valueNumeric="599.99"/>
+            <column name="internal_code" value="INT-T003"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Smartwatch Elite"/>
+            <column name="description" value="Premium fitness smartwatch"/>
+            <column name="price" valueNumeric="299.99"/>
+            <column name="internal_code" value="INT-S004"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Gaming Monitor"/>
+            <column name="description" value="144Hz curved gaming monitor"/>
+            <column name="price" valueNumeric="399.99"/>
+            <column name="internal_code" value="INT-G005"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Wireless Headphones"/>
+            <column name="description" value="Noise-cancelling wireless headphones"/>
+            <column name="price" valueNumeric="199.99"/>
+            <column name="internal_code" value="INT-H006"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Bluetooth Speaker"/>
+            <column name="description" value="Portable speaker with deep bass"/>
+            <column name="price" valueNumeric="129.99"/>
+            <column name="internal_code" value="INT-B007"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="E-Reader"/>
+            <column name="description" value="Glare-free reading device"/>
+            <column name="price" valueNumeric="149.99"/>
+            <column name="internal_code" value="INT-E008"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Portable SSD"/>
+            <column name="description" value="1TB high-speed storage"/>
+            <column name="price" valueNumeric="179.99"/>
+            <column name="internal_code" value="INT-SSD09"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="4K Action Camera"/>
+            <column name="description" value="Waterproof camera with 4K video"/>
+            <column name="price" valueNumeric="249.99"/>
+            <column name="internal_code" value="INT-C010"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Gaming Mouse"/>
+            <column name="description" value="Programmable RGB gaming mouse"/>
+            <column name="price" valueNumeric="89.99"/>
+            <column name="internal_code" value="INT-M011"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Mechanical Keyboard"/>
+            <column name="description" value="Backlit mechanical keyboard"/>
+            <column name="price" valueNumeric="109.99"/>
+            <column name="internal_code" value="INT-K012"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Smart Thermostat"/>
+            <column name="description" value="Wi-Fi thermostat with AI control"/>
+            <column name="price" valueNumeric="169.99"/>
+            <column name="internal_code" value="INT-T013"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Robot Vacuum"/>
+            <column name="description" value="Smart robot vacuum with sensors"/>
+            <column name="price" valueNumeric="449.99"/>
+            <column name="internal_code" value="INT-V014"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Smart Doorbell"/>
+            <column name="description" value="Video doorbell with app control"/>
+            <column name="price" valueNumeric="139.99"/>
+            <column name="internal_code" value="INT-D015"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Smart Light Bulbs"/>
+            <column name="description" value="Voice-controlled RGB bulbs"/>
+            <column name="price" valueNumeric="79.99"/>
+            <column name="internal_code" value="INT-L016"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Drone 4K"/>
+            <column name="description" value="Compact drone with 4K camera"/>
+            <column name="price" valueNumeric="699.99"/>
+            <column name="internal_code" value="INT-DR017"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Gaming Chair"/>
+            <column name="description" value="Ergonomic chair for long sessions"/>
+            <column name="price" valueNumeric="229.99"/>
+            <column name="internal_code" value="INT-CH018"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Streaming Microphone"/>
+            <column name="description" value="USB mic for podcasting/streaming"/>
+            <column name="price" valueNumeric="149.99"/>
+            <column name="internal_code" value="INT-MIC19"/>
+        </insert>
+        <insert tableName="product">
+            <column name="name" value="Mini Projector"/>
+            <column name="description" value="HD projector for home cinema"/>
+            <column name="price" valueNumeric="299.99"/>
+            <column name="internal_code" value="INT-P020"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

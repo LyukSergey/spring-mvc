@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/realms/L10-2-spring-security-keycloak/protocol/openid-connect/certs
+  datasource:
+    url: jdbc:postgresql://localhost:5432/l10-2-spring-security-keycloak
+    username: us
+    password: us
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false
+
+keycloak:
+  realm: L10-2-spring-security-keycloak
+  auth-server-url: http://localhost:8081
+  admin-client-id: L10-2-spring-security-keycloak-client
+  admin-client-secret: dChODu3kmS5RmXDUznNguffex3mlA87D
