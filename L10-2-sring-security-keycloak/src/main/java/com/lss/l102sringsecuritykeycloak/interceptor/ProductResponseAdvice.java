@@ -45,8 +45,7 @@ public class ProductResponseAdvice implements ResponseBodyAdvice<Object> {
                         if (item instanceof ProductResource p) {
                             return new ProductResource(
                                     p.getId(), p.getName(), p.getDescription(),
-                                    p.getPrice(), p.getInternalCode(), p.getImageUrl(), isAdmin
-                            );
+                                    p.getPrice(), p.getInternalCode(), p.getImageUrl(), isAdmin);
                         }
                         return item;
                     })

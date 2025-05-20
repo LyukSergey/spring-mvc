@@ -5,6 +5,7 @@ import com.lss.l102sringsecuritykeycloak.mapper.ProductMapper;
 import com.lss.l102sringsecuritykeycloak.repository.ProductRepository;
 import com.lss.l102sringsecuritykeycloak.resource.ProductResource;
 import com.lss.l102sringsecuritykeycloak.service.ProductService;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +21,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @PreAuthorize("hasAnyRole('ADMIN_USER', 'MANAGER')")
     public List<ProductResource> getAll() {
-        return productRepository.findAll().stream()
+        return productRepository.findAllByDeletedFalse()
+                .stream()
                 .map(mapper::toResource)
                 .toList();
     }
@@ -42,7 +44,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @PreAuthorize("hasRole('ADMIN_USER')")
+    @Transactional
     public void delete(Long id) {
-        productRepository.deleteById(id);
+        productRepository.findById(id)
+                .ifPresent(product -> product.setDeleted(true));
     }
 }

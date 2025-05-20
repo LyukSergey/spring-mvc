@@ -19,7 +19,6 @@ public class ProductResource {
     private Double price;
     private String internalCode;
     private String imageUrl;
-    private boolean remove;
-
+    private Boolean isAdmin;
 }
 

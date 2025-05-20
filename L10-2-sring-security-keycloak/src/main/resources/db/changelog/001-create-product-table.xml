@@ -13,6 +13,9 @@
             <column name="description" type="TEXT"/>
             <column name="price" type="DECIMAL(10,2)"/>
             <column name="internal_code" type="VARCHAR(100)"/>
+            <column name="deleted" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>
