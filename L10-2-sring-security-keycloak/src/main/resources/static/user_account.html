@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Account</title>
+  <title>My Account</title>
   <meta charset="UTF-8">
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -16,7 +16,7 @@
 
     .card {
       background: white;
-      padding: 30px;
+      padding: 30px 40px;
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       width: 400px;
@@ -32,39 +32,44 @@
       margin: 10px 0;
     }
 
-    .card a {
-      display: inline-block;
+    .card a, .card button {
       margin-top: 20px;
       padding: 10px 20px;
       background: #007bff;
       color: white;
       text-decoration: none;
+      border: none;
       border-radius: 6px;
+      cursor: pointer;
+      display: inline-block;
     }
 
-    .card a:hover {
+    .card a:hover,
+    .card button:hover {
       background: #0056b3;
     }
-  </style>
-  <script>
-    function logout() {
-      localStorage.removeItem("access_token");
-      window.location.href = "./login.html";
+
+    .card .secondary {
+      background: #6c757d;
     }
 
-    document.addEventListener("DOMContentLoaded", async () => {
+    .card .secondary:hover {
+      background: #5a6268;
+    }
+  </style>
+
+  <script>
+    async function loadAccount() {
       const token = localStorage.getItem("access_token");
       if (!token) {
-        alert("❌ Not authorized");
-        window.location.href = "./login.html";
+        window.location.href = "/login.html";
         return;
       }
 
       try {
         const response = await fetch("/account", {
-          method: "GET",
           headers: {
-            "Authorization": "Bearer " + token
+            Authorization: "Bearer " + token
           }
         });
 
@@ -78,17 +83,27 @@
 
       } catch (err) {
         alert("❌ Session expired or unauthorized");
-        window.location.href = "./login.html";
+        localStorage.removeItem("access_token");
+        window.location.href = "/login.html";
       }
-    });
+    }
+
+    function logout() {
+      localStorage.removeItem("access_token");
+      window.location.href = "/login.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", loadAccount);
   </script>
 </head>
 <body>
 <div class="card">
-  <h1>Account Info</h1>
+  <h1>My Account</h1>
   <p>👤 Username: <span id="username">loading...</span></p>
   <p>📧 Email: <span id="email">loading...</span></p>
-  <a href="#" onclick="logout()">Logout</a>
+
+  <a class="secondary" href="/index.html">← Back to Store</a>
+  <button onclick="logout()">Logout</button>
 </div>
 </body>
 </html>

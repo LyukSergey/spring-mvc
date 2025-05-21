@@ -32,11 +32,12 @@ public class SecurityConfig {
                                 "/index.html",
                                 "/login.html",
                                 "/register.html",
+                                "/product_details.html",
+                                "/user_account.html",
                                 "/auth/login",
                                 "/css/**",
                                 "/auth/register",
                                 "/images/**").permitAll()
-                        .requestMatchers("/account/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
