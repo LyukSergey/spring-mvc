@@ -182,6 +182,7 @@ public class AuthRestController {
                 .queryParam("response_type", "code")
                 .queryParam("scope", "openid profile email")
                 .queryParam("kc_idp_hint", "google")
+                .queryParam("prompt", "select_account")
                 .build()
                 .toUriString();
 
