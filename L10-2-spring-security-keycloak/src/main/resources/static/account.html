@@ -5,90 +5,60 @@
   <meta charset="UTF-8">
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: #eef2f7;
       height: 100vh;
       margin: 0;
     }
-
     .card {
       background: white;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-      width: 400px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
       text-align: center;
     }
-
-    .card h1 {
-      margin-bottom: 20px;
+    .card h2 {
+      margin-bottom: 10px;
     }
-
     .card p {
-      font-size: 1.1rem;
       margin: 10px 0;
     }
-
-    .card a {
-      display: inline-block;
-      margin-top: 20px;
+    .card button {
       padding: 10px 20px;
       background: #007bff;
       color: white;
-      text-decoration: none;
+      border: none;
       border-radius: 6px;
-    }
-
-    .card a:hover {
-      background: #0056b3;
+      cursor: pointer;
     }
   </style>
   <script>
-    function logout() {
-      localStorage.removeItem("access_token");
-      window.location.href = "./login.html";
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      const token = localStorage.getItem("access_token");
-      if (!token) {
-        alert("❌ Not authorized");
-        window.location.href = "./login.html";
-        return;
-      }
-
+    async function loadAccount() {
       try {
-        const response = await fetch("/account", {
-          method: "GET",
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error("Unauthorized");
-        }
-
-        const data = await response.json();
+        const res = await fetch("/account", { credentials: "include" });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
         document.getElementById("username").textContent = data.username;
         document.getElementById("email").textContent = data.email;
-
-      } catch (err) {
-        alert("❌ Session expired or unauthorized");
-        window.location.href = "./login.html";
+      } catch (e) {
+        window.location.href = "/login.html";
       }
-    });
+    }
+    function logout() {
+      window.location.href = "/auth/logout";
+    }
+    document.addEventListener("DOMContentLoaded", loadAccount);
   </script>
 </head>
 <body>
 <div class="card">
-  <h1>Account Info</h1>
-  <p>👤 Username: <span id="username">loading...</span></p>
-  <p>📧 Email: <span id="email">loading...</span></p>
-  <a href="#" onclick="logout()">Logout</a>
+  <h2>Account Info</h2>
+  <p>👤 Username: <span id="username">...</span></p>
+  <p>📧 Email: <span id="email">...</span></p>
+  <button onclick="logout()">Logout</button>
 </div>
 </body>
 </html>

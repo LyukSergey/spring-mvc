@@ -6,100 +6,57 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+      background: #f4f4f4;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .card {
-      background: #fff;
       padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      max-width: 600px;
-      width: 90%;
-      text-align: center;
     }
-
+    .card {
+      background: white;
+      max-width: 600px;
+      width: 100%;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
     .card img {
       width: 100%;
-      max-height: 300px;
+      height: 300px;
       object-fit: cover;
       border-radius: 10px;
-      margin-bottom: 20px;
     }
-
     .card h2 {
-      margin-bottom: 10px;
-    }
-
-    .card p {
-      font-size: 16px;
-      color: #555;
-    }
-
-    .back-button {
       margin-top: 20px;
-      background: #007bff;
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 6px;
-      display: inline-block;
-    }
-
-    .back-button:hover {
-      background: #0056b3;
     }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
-      const token = localStorage.getItem("access_token");
-      if (!token) {
-        window.location.href = "/login.html";
-        return;
-      }
-
       const urlParams = new URLSearchParams(window.location.search);
-      const productId = urlParams.get("id");
-      if (!productId) {
-        alert("Invalid product ID");
-        return;
-      }
+      const id = urlParams.get("id");
+      if (!id) return alert("Product not found");
 
       try {
-        const res = await fetch(`/products/${productId}`, {
-          headers: {
-            Authorization: "Bearer " + token
-          }
-        });
-
-        if (!res.ok) {
-          throw new Error("Not found");
-        }
-
+        const res = await fetch(`/products/${id}`, { credentials: "include" });
+        if (!res.ok) throw new Error("Unauthorized");
         const p = await res.json();
 
-        document.getElementById("img").src = p.imageUrl || "/images/default_image.png";
         document.getElementById("name").textContent = p.name;
         document.getElementById("desc").textContent = p.description;
         document.getElementById("price").textContent = "$" + p.price;
-      } catch (err) {
-        alert("⚠️ Failed to load product");
+        document.getElementById("img").src = p.imageUrl || "/images/default_image.png";
+      } catch (e) {
+        alert("❌ Cannot load product");
+        window.location.href = "/index.html";
       }
     });
   </script>
 </head>
 <body>
 <div class="card">
-  <img id="img" src="" alt="Product Image">
+  <img id="img" src="" alt="Product image">
   <h2 id="name">Loading...</h2>
   <p id="desc">Loading description...</p>
-  <p id="price"></p>
-  <a class="back-button" href="/index.html">← Back to products</a>
+  <h3 id="price"></h3>
 </div>
 </body>
 </html>

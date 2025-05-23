@@ -1,11 +1,16 @@
 server:
   port: 8080
 
+app:
+  jwt:
+    secret: your-very-secret-256-bit-key-here-must-be-long-enough
+
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
+          issuer-uri: http://localhost:8081/realms/L10-2-spring-security-keycloak
           jwk-set-uri: http://localhost:8081/realms/L10-2-spring-security-keycloak/protocol/openid-connect/certs
   datasource:
     url: jdbc:postgresql://localhost:5432/l10-2-spring-security-keycloak
