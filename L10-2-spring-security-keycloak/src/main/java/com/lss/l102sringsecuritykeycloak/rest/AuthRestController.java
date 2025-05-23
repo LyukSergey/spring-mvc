@@ -24,7 +24,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -73,10 +72,13 @@ public class AuthRestController {
             // 1. Отримати admin access token
             HttpHeaders tokenHeaders = new HttpHeaders();
             tokenHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-            String tokenBody = "grant_type=client_credentials" +
-                    "&client_id=" + URLEncoder.encode(keycloakProperty.getAdminClientId(), StandardCharsets.UTF_8) +
-                    "&client_secret=" + URLEncoder.encode(keycloakProperty.getAdminClientSecret(), StandardCharsets.UTF_8);
-            HttpEntity<String> tokenRequest = new HttpEntity<>(tokenBody, tokenHeaders);
+            MultiValueMap<String, String> tokenBody = new LinkedMultiValueMap<>();
+            tokenBody.add("grant_type", "client_credentials");
+            tokenBody.add("client_id", keycloakProperty.getAdminClientId());
+            tokenBody.add("client_secret", keycloakProperty.getAdminClientSecret());
+
+            HttpEntity<MultiValueMap<String, String>> tokenRequest =
+                    new HttpEntity<>(tokenBody, tokenHeaders);
 
             Map<?, ?> tokenResponse = restTemplate.postForObject(
                     keycloakProperty.getAuthServerUrl() + "/realms/" + keycloakProperty.getRealm() + "/protocol/openid-connect/token",
