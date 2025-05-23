@@ -13,19 +13,23 @@
       height: 100vh;
       margin: 0;
     }
+
     .card {
       background: white;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
       text-align: center;
     }
+
     .card h2 {
       margin-bottom: 10px;
     }
+
     .card p {
       margin: 10px 0;
     }
+
     .card button {
       padding: 10px 20px;
       background: #007bff;
@@ -38,8 +42,10 @@
   <script>
     async function loadAccount() {
       try {
-        const res = await fetch("/account", { credentials: "include" });
-        if (!res.ok) throw new Error();
+        const res = await fetch("/account", {credentials: "include"});
+        if (!res.ok) {
+          throw new Error();
+        }
         const data = await res.json();
         document.getElementById("username").textContent = data.username;
         document.getElementById("email").textContent = data.email;
@@ -47,9 +53,11 @@
         window.location.href = "/login.html";
       }
     }
+
     function logout() {
       window.location.href = "/auth/logout";
     }
+
     document.addEventListener("DOMContentLoaded", loadAccount);
   </script>
 </head>

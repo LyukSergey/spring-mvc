@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OAuth Callback</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+<h2>Processing login...</h2>
+
+<script>
+  (async function () {
+    const code = new URLSearchParams(window.location.search).get("code");
+    if (!code) {
+      alert("❌ No code found");
+      return;
+    }
+    window.history.replaceState({}, document.title, "/callback.html");
+
+    const res = await fetch("/oauth/callback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    });
+
+    if (!res.ok) {
+      alert("❌ Token exchange failed");
+      return;
+    }
+
+    const data = await res.json();
+    const token = data.access_token;
+
+    if (token) {
+      localStorage.setItem("access_token", token);
+      window.location.href = "/index.html";
+    } else {
+      alert("❌ No token received");
+    }
+  })();
+</script>
+</body>
+</html>

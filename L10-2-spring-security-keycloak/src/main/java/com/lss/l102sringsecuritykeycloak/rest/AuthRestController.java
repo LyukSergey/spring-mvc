@@ -9,7 +9,10 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,7 +37,7 @@ public class AuthRestController {
     private final KeycloakProperty keycloakProperty;
 
     @PostMapping("/auth/login")
-    public void login(@RequestBody LoginRequest request, HttpServletResponse response) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest request, HttpServletResponse response) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -47,15 +50,20 @@ public class AuthRestController {
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         try {
-            Map<?, ?> token = restTemplate.postForObject(
+            final ResponseEntity<Object> responseEntity = restTemplate.exchange(
                     keycloakProperty.getAuthServerUrl() + "/realms/" + keycloakProperty.getRealm() + "/protocol/openid-connect/token",
+                    HttpMethod.POST,
                     entity,
-                    Map.class
+                    new ParameterizedTypeReference<>() {
+                    }
             );
-            String accessToken = (String) token.get("access_token");
-            response.sendRedirect("http://localhost:8080/index.html?token=" + URLEncoder.encode(accessToken, StandardCharsets.UTF_8));
+            Map<String, Object> tokenResponse = Optional.ofNullable(responseEntity.getBody())
+                    .map(o -> (Map<String, Object>) o)
+                    .orElse(Map.of());
+            return ResponseEntity.ok(tokenResponse);
         } catch (Exception ex) {
-            throw new RuntimeException("Not authorised", ex);
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized"));
         }
     }
 
@@ -164,7 +172,7 @@ public class AuthRestController {
 
     @GetMapping("/auth/google")
     public void redirectToGoogle(HttpServletResponse response) throws IOException {
-        String redirectUri = "http://localhost:8080/oauth/callback";
+        String redirectUri = "http://localhost:8080/callback.html";
 
         String authUrl = UriComponentsBuilder
                 .fromHttpUrl(
@@ -180,34 +188,33 @@ public class AuthRestController {
         response.sendRedirect(authUrl);
     }
 
-    @GetMapping("/oauth/callback")
-    public void handleCallback(@RequestParam String code, HttpServletResponse response) throws IOException {
+    @PostMapping("/oauth/callback")
+    public ResponseEntity<Map<String, Object>> handleCallback(@RequestBody Map<String, String> payload) {
+        final String code = StringUtils.defaultIfBlank(payload.get("code"), "");
         // 1. Підготовка параметрів
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("code", code);
-        params.add("redirect_uri", "http://localhost:8080/oauth/callback");
         params.add("client_id", keycloakProperty.getAdminClientId());
+        params.add("redirect_uri", "http://localhost:8080/callback.html");
         params.add("client_secret", keycloakProperty.getAdminClientSecret());
 
         // 2. HTTP-запит у Keycloak
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        ResponseEntity<Map> tokenResponse = restTemplate.postForEntity(
+        final ResponseEntity<Object> responseEntity = restTemplate.exchange(
                 keycloakProperty.getAuthServerUrl() + "/realms/" + keycloakProperty.getRealm() + "/protocol/openid-connect/token",
+                HttpMethod.POST,
                 request,
-                Map.class
+                new ParameterizedTypeReference<>() {
+                }
         );
-
-        // 3. Отримай токен і збережи його (наприклад у cookie)
-        Map<String, Object> body = tokenResponse.getBody();
-        String token = (String) body.get("access_token");
-
-        // Redirect user
-        response.sendRedirect("http://localhost:8080/index.html?token=" + token);
+        Map<String, Object> tokenResponse = Optional.ofNullable(responseEntity.getBody())
+                .map(o -> (Map<String, Object>) o)
+                .orElse(Map.of());
+        return ResponseEntity.ok(tokenResponse);
     }
 
 

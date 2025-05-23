@@ -33,11 +33,13 @@ public class SecurityConfig {
                                 "/register.html",
                                 "/product_details.html",
                                 "/user_account.html",
+                                "/callback.html",
                                 "/auth/login",
                                 "/auth/google",
                                 "/css/**",
-                                "/oauth/*",
+                                "/oauth/**",
                                 "/auth/register",
+                                "/auth/callback",
                                 "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )

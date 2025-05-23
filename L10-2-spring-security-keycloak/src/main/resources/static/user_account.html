@@ -37,8 +37,19 @@
   </style>
   <script>
     async function loadUser() {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        alert("🔒 Не авторизовано");
+        window.location.href = "/login.html";
+        return;
+      }
+
       try {
-        const res = await fetch('/account', { credentials: 'include' });
+        const res = await fetch('/account', {
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        });
         if (!res.ok) throw new Error('Unauthorized');
         const user = await res.json();
         document.getElementById('username').textContent = user.username;
@@ -48,7 +59,8 @@
       }
     }
     function logout() {
-      window.location.href = '/auth/logout';
+      localStorage.removeItem("access_token");
+      window.location.href = "/login.html";
     }
     document.addEventListener('DOMContentLoaded', loadUser);
   </script>

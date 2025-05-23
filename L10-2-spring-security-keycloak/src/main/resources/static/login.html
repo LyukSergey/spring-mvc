@@ -1,131 +1,161 @@
-<!-- login.html -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Login</title>
-  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5f5;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      background: linear-gradient(to right, #667eea, #764ba2);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
     }
 
-    .login-box {
+    .login-container {
       background: #fff;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      width: 320px;
-      text-align: center;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
     }
 
-    input[type=text], input[type=password] {
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
       width: 100%;
-      padding: 10px;
-      margin: 8px 0;
+      padding: 12px;
+      margin-bottom: 16px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 8px;
+      font-size: 16px;
     }
 
     button {
       width: 100%;
-      padding: 10px;
-      background: #007bff;
-      color: #fff;
+      padding: 12px;
+      font-size: 16px;
       border: none;
-      border-radius: 4px;
-      font-weight: bold;
+      border-radius: 8px;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #0056b3;
+    .login-btn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .login-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .google-btn {
+      background: #db4437;
+      color: white;
+      margin-top: 12px;
+    }
+
+    .google-btn:hover {
+      background: #b8372d;
     }
 
     .register-link {
-      margin-top: 10px;
       display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: #007bff;
+      text-decoration: none;
+      font-size: 14px;
     }
 
-    .error-message, .success-message {
-      padding: 10px;
+    .register-link:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: red;
       margin-top: 10px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-
-    .error-message {
-      color: #dc3545;
-      background-color: #f8d7da;
-    }
-
-    .success-message {
-      color: #155724;
-      background-color: #d4edda;
+      text-align: center;
     }
   </style>
+</head>
+<body>
 
-  <script>
-    async function login(event) {
-      event.preventDefault();
+<div class="login-container">
+  <h2>Login</h2>
 
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const errorBox = document.getElementById('error');
-      const successBox = document.getElementById('success');
-      errorBox.style.display = 'none';
-      successBox.style.display = 'none';
+  <input type="text" id="username" placeholder="Username" />
+  <input type="password" id="password" placeholder="Password" />
+  <button class="login-btn" onclick="loginUser()">Login</button>
 
-      if (!username || !password) {
-        errorBox.textContent = 'Username and password are required';
-        errorBox.style.display = 'block';
+  <a href="/register.html" class="register-link">Don't have an account? Register</a>
+
+  <hr style="margin: 20px 0;" />
+
+  <button class="google-btn" onclick="loginWithGoogle()">Login with Google</button>
+
+  <div class="error" id="error-msg"></div>
+</div>
+
+<script>
+  // Витягнути токен після авторизації через Google
+  const tokenFromUrl = new URLSearchParams(window.location.search).get("token");
+  if (tokenFromUrl) {
+    localStorage.setItem("access_token", tokenFromUrl);
+    window.history.replaceState({}, document.title, "/index.html");
+    window.location.href = "/index.html";
+  }
+
+  async function loginUser() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const errorDiv = document.getElementById("error-msg");
+
+    if (!username || !password) {
+      errorDiv.textContent = "⚠️ Please enter both username and password.";
+      return;
+    }
+
+    try {
+      const res = await fetch("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (!res.ok) {
+        errorDiv.textContent = "❌ Invalid credentials.";
         return;
       }
 
-      try {
-        const response = await fetch('/auth/login', {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
+      const data = await res.json();
+      const token = data.access_token;
 
-        if (response.ok) {
-          successBox.textContent = '✅ Login successful';
-          successBox.style.display = 'block';
-          setTimeout(() => window.location.href = response.url, 1000);
-        } else {
-          const err = await response.json();
-          errorBox.textContent = err.error || 'Login failed';
-          errorBox.style.display = 'block';
-        }
-      } catch (e) {
-        errorBox.textContent = 'Something went wrong. Try again later.';
-        errorBox.style.display = 'block';
+      if (!token) {
+        errorDiv.textContent = "⚠️ No token received from server.";
+        return;
       }
+
+      localStorage.setItem("access_token", token);
+      window.location.href = "/index.html";
+    } catch (e) {
+      console.error("Login error:", e);
+      errorDiv.textContent = "❌ Login failed.";
     }
-  </script>
-</head>
-<body>
-<div class="login-box">
-  <h2>Login</h2>
-  <div id="error" class="error-message" style="display: none;"></div>
-  <div id="success" class="success-message" style="display: none;"></div>
-  <form onsubmit="login(event)">
-    <input id="username" type="text" placeholder="Username" required>
-    <input id="password" type="password" placeholder="Password" required>
-    <button type="submit">Login</button>
-  </form>
-  <a href="/register.html" class="register-link">Don't have an account? Register</a>
-  <hr style="margin: 20px 0;">
-  <a href="/auth/google">
-    <button style="padding: 10px 20px; font-size: 16px;">Login with Google</button>
-  </a>
-</div>
+  }
+
+  function loginWithGoogle() {
+    window.location.href = "/auth/google";
+  }
+</script>
+
 </body>
 </html>
