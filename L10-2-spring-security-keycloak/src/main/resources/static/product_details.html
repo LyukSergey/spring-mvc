@@ -10,6 +10,7 @@
       display: flex;
       justify-content: center;
       padding: 40px;
+      margin: 0;
     }
     .card {
       background: white;
@@ -29,27 +30,6 @@
       margin-top: 20px;
     }
   </style>
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get("id");
-      if (!id) return alert("Product not found");
-
-      try {
-        const res = await fetch(`/products/${id}`, { credentials: "include" });
-        if (!res.ok) throw new Error("Unauthorized");
-        const p = await res.json();
-
-        document.getElementById("name").textContent = p.name;
-        document.getElementById("desc").textContent = p.description;
-        document.getElementById("price").textContent = "$" + p.price;
-        document.getElementById("img").src = p.imageUrl || "/images/default_image.png";
-      } catch (e) {
-        alert("❌ Cannot load product");
-        window.location.href = "/index.html";
-      }
-    });
-  </script>
 </head>
 <body>
 <div class="card">
@@ -58,5 +38,45 @@
   <p id="desc">Loading description...</p>
   <h3 id="price"></h3>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+    if (!id) {
+      alert("❌ Product ID not found in URL");
+      window.location.href = "/index.html";
+      return;
+    }
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      alert("🔒 Not authorized");
+      window.location.href = "/login.html";
+      return;
+    }
+
+    try {
+      const res = await fetch(`/products/${id}`, {
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      });
+
+      if (!res.ok) throw new Error("Unauthorized");
+      const p = await res.json();
+
+      document.getElementById("name").textContent = p.name;
+      document.getElementById("desc").textContent = p.description;
+      document.getElementById("price").textContent = "$" + p.price;
+      document.getElementById("img").src = p.imageUrl || "/images/default_image.png";
+
+    } catch (e) {
+      console.error(e);
+      alert("❌ Cannot load product");
+      window.location.href = "/index.html";
+    }
+  });
+</script>
 </body>
 </html>

@@ -39,6 +39,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
     }
     .product-image {
       width: 100%;
@@ -48,8 +49,6 @@
     }
     .product-content {
       padding: 20px;
-      display: flex;
-      flex-direction: column;
     }
     .product-name {
       font-size: 18px;
@@ -68,18 +67,26 @@
       color: #007bff;
       margin-bottom: 16px;
     }
-    .add-to-cart-btn,
-    .remove-btn {
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 14px;
-      cursor: pointer;
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px 20px;
+      gap: 10px;
     }
-    .remove-btn {
-      background: #dc3545;
+    .btn {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #fff;
+    }
+    .details-btn {
+      background-color: #28a745;
+    }
+    .delete-btn {
+      background-color: #dc3545;
     }
     .no-products {
       text-align: center;
@@ -90,12 +97,16 @@
   </style>
 
   <script>
-    // Збереження токена, якщо переданий в URL
-    const tokenFromUrl = new URLSearchParams(window.location.search).get("token");
-    if (tokenFromUrl) {
-      localStorage.setItem("access_token", tokenFromUrl);
-      // Очистити параметр з адреси
-      window.history.replaceState({}, document.title, "/index.html");
+    function parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = decodeURIComponent(atob(base64Url).split('').map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(base64);
+      } catch (e) {
+        return {};
+      }
     }
 
     function logout() {
@@ -106,10 +117,15 @@
     async function loadProducts() {
       const token = localStorage.getItem("access_token");
       if (!token) {
-        alert("🔒 Не авторизовано");
+        alert("🔒 Not authorized");
         window.location.href = "/login.html";
         return;
       }
+
+      // 🔍 Розпарсити токен і перевірити роль
+      const payload = parseJwt(token);
+      const roles = payload?.realm_access?.roles || [];
+      const isAdmin = roles.includes("ADMIN_USER");
 
       try {
         const res = await fetch("/products", {
@@ -133,26 +149,55 @@
           const card = document.createElement("div");
           card.className = "product-card";
           card.innerHTML = `
-            <a href="./product_details.html?id=${p.id}">
-              <img class="product-image" src="${p.imageUrl || '/images/default_image.png'}" alt="Image">
-              <div class="product-content">
-                <div class="product-name">${p.name}</div>
-                <div class="product-description">${p.description}</div>
-                <div class="product-price">$${p.price}</div>
-              </div>
-            </a>
-          `;
+          <img class="product-image" src="${p.imageUrl || '/images/default_image.png'}" alt="Image">
+          <div class="product-content">
+            <div class="product-name">${p.name}</div>
+            <div class="product-description">${p.description}</div>
+            <div class="product-price">$${p.price}</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn details-btn" onclick="viewDetails(${p.id})">🔍 Details</button>
+            ${isAdmin ? `<button class="btn delete-btn" onclick="deleteProduct(${p.id})">🗑 Delete</button>` : ''}
+          </div>
+        `;
           container.appendChild(card);
         });
 
       } catch (err) {
-        alert("❌ Not authorized");
+        alert("❌ Failed to load products");
         window.location.href = "/login.html";
+      }
+    }
+
+    function viewDetails(id) {
+      window.location.href = `/product_details.html?id=${id}`;
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm("Are you sure you want to delete this product?")) return;
+
+      const token = localStorage.getItem("access_token");
+      try {
+        const res = await fetch(`/products/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        });
+
+        if (res.ok) {
+          loadProducts(); // перезавантажити
+        } else {
+          alert("❌ Failed to delete product");
+        }
+      } catch (e) {
+        alert("❌ Error during delete");
       }
     }
 
     document.addEventListener("DOMContentLoaded", loadProducts);
   </script>
+
 </head>
 <body>
 
